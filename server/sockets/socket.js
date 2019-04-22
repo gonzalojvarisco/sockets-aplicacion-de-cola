@@ -15,7 +15,8 @@ io.on('connection', (client) => {
     });
 
     client.emit('estadoActual', {
-        actual: ticketControl.getUltimoTicket()
+        actual: ticketControl.getUltimoTicket(),
+        ultimos4: ticketControl.getUltimos4()
     });
 
     client.on('atenderTicket', (data, callback) => {
@@ -30,6 +31,12 @@ io.on('connection', (client) => {
         let atenderTicket = ticketControl.atenderTicket(data.escritorio);
 
         callback(atenderTicket);
+
+        //actualizar/notificar cambios en los ultimos4
+
+        client.broadcast.emit('ultimos4', {
+            ultimos4: ticketControl.getUltimos4()
+        });
 
     });
 
